@@ -5,8 +5,12 @@ defineEmits(['tempoChange'])
 </script>
 
 <template>
-  <input v-on:change="$emit('tempoChange', 60)" type="radio" id="60" value="60" v-model="tempo" />
-  <label for="60">60</label>
-  <input v-on:change="$emit('tempoChange', 80)" type="radio" id="80" value="80" v-model="tempo" />
-  <label for="80">80</label>
+  <label>Tempo: {{ tempo }} bpm</label>
+  <input
+    v-model="tempo"
+    v-on:change="$emit('tempoChange', tempo)"
+    type="range"
+    min="40"
+    max="120"
+  />
 </template>
