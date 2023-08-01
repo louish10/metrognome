@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 const tempo = ref(60)
+defineEmits(['tempoChange'])
 </script>
 
 <template>
