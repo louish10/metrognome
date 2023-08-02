@@ -14,13 +14,24 @@ const intervalId = ref(0)
 let context = null
 let audioBuffer = null
 
+let lastClick = 0
+let nextClick = 0
+let clickScheduled = false
+
 function clickInterval() {
-  // tempo is in bpm. Want to convert to interval in ms
-  return (60 * 1000) / tempo.value
+  // tempo is in bpm. Want to convert to interval in s
+  return 60 / tempo.value
+}
+
+function scheduleClick(time) {
+  let source = context.createBufferSource()
+  source.buffer = audioBuffer
+  source.connect(context.destination)
+  source.start(time)
+  clickScheduled = true
 }
 
 async function playAudio() {
-  //audio.play()
   if (!context) {
     context = new AudioContext()
     audioBuffer = await fetch('click.wav')
@@ -28,12 +39,18 @@ async function playAudio() {
       .then((ArrayBuffer) => context.decodeAudioData(ArrayBuffer))
   }
 
+  nextClick = context.currentTime
+
   intervalId.value = setInterval(() => {
-    let source = context.createBufferSource()
-    source.buffer = audioBuffer
-    source.connect(context.destination)
-    source.start(context.currentTime)
-  }, clickInterval())
+    if (context.currentTime > nextClick) {
+      clickScheduled = false
+      lastClick = nextClick
+      nextClick = lastClick + clickInterval()
+    }
+    if (!clickScheduled && nextClick - context.currentTime < 0.1) {
+      scheduleClick(nextClick)
+    }
+  }, 50)
 }
 
 function stopAudio() {
@@ -52,11 +69,6 @@ function toggleRunning() {
 
 function changeTempo(newTempo) {
   tempo.value = newTempo
-
-  if (running.value) {
-    clearInterval(intervalId.value)
-    playAudio()
-  }
 }
 </script>
 
