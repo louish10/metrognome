@@ -11,17 +11,28 @@ defineProps({
 const running = ref(false)
 const tempo = ref(60)
 const intervalId = ref(0)
-const audio = new Audio('../../public/click.wav')
+let context = null
+let audioBuffer = null
 
 function clickInterval() {
   // tempo is in bpm. Want to convert to interval in ms
   return (60 * 1000) / tempo.value
 }
 
-function playAudio() {
-  audio.play()
+async function playAudio() {
+  //audio.play()
+  if (!context) {
+    context = new AudioContext()
+    audioBuffer = await fetch('click.wav')
+      .then((res) => res.arrayBuffer())
+      .then((ArrayBuffer) => context.decodeAudioData(ArrayBuffer))
+  }
+
   intervalId.value = setInterval(() => {
-    audio.play()
+    let source = context.createBufferSource()
+    source.buffer = audioBuffer
+    source.connect(context.destination)
+    source.start(context.currentTime)
   }, clickInterval())
 }
 
