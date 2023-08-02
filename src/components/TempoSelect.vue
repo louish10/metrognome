@@ -5,7 +5,7 @@ defineEmits(['tempoChange'])
 </script>
 
 <template>
-  <label>Tempo: {{ tempo }} bpm</label>
+  <label class="tempo-value">Tempo: {{ tempo }} bpm</label>
   <input
     v-model="tempo"
     v-on:change="$emit('tempoChange', tempo)"
@@ -14,3 +14,9 @@ defineEmits(['tempoChange'])
     max="120"
   />
 </template>
+
+<style scoped>
+.tempo-value {
+  font-size: 24px;
+}
+</style>

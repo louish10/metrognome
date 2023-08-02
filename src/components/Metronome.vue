@@ -62,6 +62,7 @@ function changeTempo(newTempo) {
 <style scoped>
 .header {
   text-align: center;
+  font-size: 70px;
 }
 
 .contents {
@@ -80,6 +81,6 @@ function changeTempo(newTempo) {
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 24px;
 }
 </style>
