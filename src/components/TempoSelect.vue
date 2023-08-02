@@ -10,8 +10,8 @@ defineEmits(['tempoChange'])
     v-model="tempo"
     v-on:change="$emit('tempoChange', tempo)"
     type="range"
-    min="40"
-    max="120"
+    min="20"
+    max="300"
   />
 </template>
 

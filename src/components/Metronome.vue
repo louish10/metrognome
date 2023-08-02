@@ -40,6 +40,7 @@ async function playAudio() {
   }
 
   nextClick = context.currentTime
+  scheduleClick(nextClick)
 
   intervalId.value = setInterval(() => {
     if (context.currentTime > nextClick) {
