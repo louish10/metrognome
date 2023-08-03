@@ -3,21 +3,31 @@ import { ref } from 'vue'
 import { onMounted } from 'vue'
 const tempo = ref(60)
 const emit = defineEmits(['tempoChange'])
+const minTempo = 20
+const maxTempo = 300
 
 onMounted(() => {
   window.addEventListener('keydown', (e) => {
     switch (e.key) {
       case 'ArrowLeft':
-        tempo.value -= 4
+        decrementTempo()
         emit('tempoChange', tempo.value)
         break
       case 'ArrowRight':
-        tempo.value += 4
+        incrementTempo()
         emit('tempoChange', tempo.value)
         break
     }
   })
 })
+
+function decrementTempo() {
+  tempo.value = Math.max((tempo.value -= 4), minTempo)
+}
+
+function incrementTempo() {
+  tempo.value = Math.min((tempo.value += 4), maxTempo)
+}
 </script>
 
 <template>
@@ -27,8 +37,8 @@ onMounted(() => {
     v-model="tempo"
     v-on:change="$emit('tempoChange', tempo)"
     type="range"
-    min="20"
-    max="300"
+    v-bind:min="minTempo"
+    v-bind:max="maxTempo"
   />
 </template>
 
