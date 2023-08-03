@@ -1,7 +1,23 @@
 <script setup>
 import { ref } from 'vue'
+import { onMounted } from 'vue'
 const tempo = ref(60)
-defineEmits(['tempoChange'])
+const emit = defineEmits(['tempoChange'])
+
+onMounted(() => {
+  window.addEventListener('keydown', (e) => {
+    switch (e.key) {
+      case 'ArrowLeft':
+        tempo.value -= 4
+        emit('tempoChange', tempo.value)
+        break
+      case 'ArrowRight':
+        tempo.value += 4
+        emit('tempoChange', tempo.value)
+        break
+    }
+  })
+})
 </script>
 
 <template>
