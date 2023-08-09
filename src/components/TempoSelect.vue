@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { onMounted } from 'vue'
+import Button from './Button.vue'
 const tempo = ref(60)
 const emit = defineEmits(['tempoChange'])
 const minTempo = 20
@@ -11,7 +12,6 @@ onMounted(() => {
     switch (e.key) {
       case 'ArrowLeft':
         decrementTempo()
-        emit('tempoChange', tempo.value)
         break
       case 'ArrowRight':
         incrementTempo()
@@ -23,10 +23,12 @@ onMounted(() => {
 
 function decrementTempo() {
   tempo.value = Math.max((tempo.value -= 4), minTempo)
+  emit('tempoChange', tempo.value)
 }
 
 function incrementTempo() {
   tempo.value = Math.min((tempo.value += 4), maxTempo)
+  emit('tempoChange', tempo.value)
 }
 </script>
 
@@ -40,6 +42,10 @@ function incrementTempo() {
     v-bind:min="minTempo"
     v-bind:max="maxTempo"
   />
+  <div class="button-container">
+    <Button label=" - 4" :cb="decrementTempo" />
+    <Button label=" + 4" :cb="incrementTempo" />
+  </div>
 </template>
 
 <style scoped>
@@ -77,5 +83,12 @@ function incrementTempo() {
   background-color: #39ff14;
   border: none;
   border-radius: 0px;
+}
+
+.button-container {
+  margin: 10px 0px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
 }
 </style>

@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import TempoSelect from './TempoSelect.vue'
+import Button from './Button.vue'
 
 defineProps({
   msg: {
