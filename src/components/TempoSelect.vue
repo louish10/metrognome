@@ -21,6 +21,16 @@ onMounted(() => {
   })
 })
 
+function decrementTempo10() {
+  tempo.value = Math.max((tempo.value -= 10), minTempo)
+  emit('tempoChange', tempo.value)
+}
+
+function incrementTempo10() {
+  tempo.value = Math.max((tempo.value += 10), minTempo)
+  emit('tempoChange', tempo.value)
+}
+
 function decrementTempo() {
   tempo.value = Math.max((tempo.value -= 4), minTempo)
   emit('tempoChange', tempo.value)
@@ -43,8 +53,10 @@ function incrementTempo() {
     v-bind:max="maxTempo"
   />
   <div class="button-container">
+    <Button label=" - 10" :cb="decrementTempo10" />
     <Button label=" - 4" :cb="decrementTempo" />
     <Button label=" + 4" :cb="incrementTempo" />
+    <Button label=" + 10" :cb="incrementTempo10" />
   </div>
 </template>
 

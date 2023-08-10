@@ -13,6 +13,9 @@ defineProps({
 const running = ref(false)
 const tempo = ref(60)
 const intervalId = ref(0)
+const modes = ['Normal', 'Speed trainer']
+const mode = ref(0)
+
 let context = null
 let audioBuffer = null
 
@@ -82,6 +85,15 @@ function changeTempo(newTempo) {
     </div>
     <TempoSelect @tempo-change="changeTempo"></TempoSelect>
     <button class="start-button" @click="toggleRunning">{{ running ? 'Stop' : 'Start' }}</button>
+    <div class="radio-container">
+      <input class="radio-input" type="radio" id="one" :value="0" v-model="mode" />
+      <label class="radio-input-label" for="one">{{ modes[0] }}</label>
+      <input class="radio-input" type="radio" id="two" :value="1" v-model="mode" />
+      <label class="radio-input-label" for="two">{{ modes[1] }}</label>
+    </div>
+    <div>
+      {{ modes[mode] }}
+    </div>
   </div>
 </template>
 
@@ -108,5 +120,29 @@ function changeTempo(newTempo) {
   text-decoration: none;
   display: inline-block;
   font-size: 48px;
+  margin: 10px 0px;
+}
+
+.radio-container {
+  margin: 20px 0px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.radio-input {
+  display: none;
+}
+
+.radio-input-label {
+  border: 2px solid #39ff14;
+  font-size: 48px;
+  padding: 15px 32px;
+  margin: 10px 0px;
+  border-radius: 15px;
+}
+
+.radio-input:checked + .radio-input-label {
+  background-color: #39ff14;
+  color: #404040;
 }
 </style>
