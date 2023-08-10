@@ -7,6 +7,13 @@ const emit = defineEmits(['tempoChange'])
 const minTempo = 20
 const maxTempo = 300
 
+function setTempo(value) {
+  if (value > 20 && value < 300) {
+    tempo.value = value
+  }
+}
+defineExpose({setTempo})
+
 onMounted(() => {
   window.addEventListener('keydown', (e) => {
     switch (e.key) {
@@ -20,6 +27,16 @@ onMounted(() => {
     }
   })
 })
+
+function decrementTempo10() {
+  tempo.value = Math.max((tempo.value -= 10), minTempo)
+  emit('tempoChange', tempo.value)
+}
+
+function incrementTempo10() {
+  tempo.value = Math.max((tempo.value += 10), minTempo)
+  emit('tempoChange', tempo.value)
+}
 
 function decrementTempo() {
   tempo.value = Math.max((tempo.value -= 4), minTempo)
@@ -43,8 +60,10 @@ function incrementTempo() {
     v-bind:max="maxTempo"
   />
   <div class="button-container">
+    <Button label=" - 10" :cb="decrementTempo10" />
     <Button label=" - 4" :cb="decrementTempo" />
     <Button label=" + 4" :cb="incrementTempo" />
+    <Button label=" + 10" :cb="incrementTempo10" />
   </div>
 </template>
 

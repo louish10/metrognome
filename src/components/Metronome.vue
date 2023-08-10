@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import TempoSelect from './TempoSelect.vue'
 import Button from './Button.vue'
+import SpeedTrainer from './SpeedTrainer.vue'
 
 defineProps({
   msg: {
@@ -10,9 +11,15 @@ defineProps({
   }
 })
 
+const speedTrainer = ref(null)
+const tempoSelect = ref(null)
+
 const running = ref(false)
 const tempo = ref(60)
 const intervalId = ref(0)
+const modes = ['Normal', 'Speed trainer']
+const mode = ref(0)
+
 let context = null
 let audioBuffer = null
 
@@ -49,6 +56,7 @@ async function playAudio() {
       clickScheduled = false
       lastClick = nextClick
       nextClick = lastClick + clickInterval()
+      speedTrainer.value.incrementBeatsPassed()
     }
     if (!clickScheduled && nextClick - context.currentTime < 0.1) {
       scheduleClick(nextClick)
@@ -58,6 +66,7 @@ async function playAudio() {
 
 function stopAudio() {
   clearInterval(intervalId.value)
+  speedTrainer.value.clearBeatsPassed()
 }
 
 function toggleRunning() {
@@ -73,6 +82,12 @@ function toggleRunning() {
 function changeTempo(newTempo) {
   tempo.value = newTempo
 }
+
+function incrementTempo(tempoIncrement) {
+  tempo.value += tempoIncrement
+  tempoSelect.value.setTempo(tempo.value)
+
+}
 </script>
 
 <template>
@@ -80,8 +95,18 @@ function changeTempo(newTempo) {
     <div>
       <h1 class="header">Metrognome</h1>
     </div>
-    <TempoSelect @tempo-change="changeTempo"></TempoSelect>
+    <TempoSelect ref="tempoSelect" @tempo-change="changeTempo"></TempoSelect>
     <button class="start-button" @click="toggleRunning">{{ running ? 'Stop' : 'Start' }}</button>
+    <SpeedTrainer ref="speedTrainer" @tempo-increment="incrementTempo"></SpeedTrainer>
+    <div class="radio-container">
+      <input class="radio-input" type="radio" id="normal" :value="0" v-model="mode" />
+      <label class="radio-input-label" for="normal">{{ modes[0] }}</label>
+      <input class="radio-input" type="radio" id="speed-trainer" :value="1" v-model="mode" />
+      <label class="radio-input-label" for="speed-trainer">{{ modes[1] }}</label>
+    </div>
+    <div>
+      {{ modes[mode] }}
+    </div>
   </div>
 </template>
 
@@ -108,5 +133,29 @@ function changeTempo(newTempo) {
   text-decoration: none;
   display: inline-block;
   font-size: 48px;
+  margin: 10px 0px;
+}
+
+.radio-container {
+  margin: 20px 0px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.radio-input {
+  display: none;
+}
+
+.radio-input-label {
+  border: 2px solid #39ff14;
+  font-size: 48px;
+  padding: 15px 32px;
+  margin: 10px 0px;
+  border-radius: 15px;
+}
+
+.radio-input:checked + .radio-input-label {
+  background-color: #39ff14;
+  color: #404040;
 }
 </style>
