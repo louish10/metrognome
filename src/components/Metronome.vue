@@ -56,7 +56,9 @@ async function playAudio() {
       clickScheduled = false
       lastClick = nextClick
       nextClick = lastClick + clickInterval()
-      speedTrainer.value.incrementBeatsPassed()
+      if (speedTrainer.value) {
+        speedTrainer.value.incrementBeatsPassed()
+      }
     }
     if (!clickScheduled && nextClick - context.currentTime < 0.1) {
       scheduleClick(nextClick)
@@ -66,7 +68,9 @@ async function playAudio() {
 
 function stopAudio() {
   clearInterval(intervalId.value)
-  speedTrainer.value.clearBeatsPassed()
+  if(speedTrainer.value) {
+    speedTrainer.value.clearBeatsPassed()
+  }
 }
 
 function toggleRunning() {
@@ -80,11 +84,13 @@ function toggleRunning() {
 }
 
 function changeTempo(newTempo) {
-  tempo.value = newTempo
+  if (newTempo >= 20 && newTempo <= 300){
+    tempo.value = newTempo
+  }
 }
 
 function incrementTempo(tempoIncrement) {
-  tempo.value += tempoIncrement
+  changeTempo(tempo.value + tempoIncrement)
   tempoSelect.value.setTempo(tempo.value)
 
 }
@@ -97,15 +103,12 @@ function incrementTempo(tempoIncrement) {
     </div>
     <TempoSelect ref="tempoSelect" @tempo-change="changeTempo"></TempoSelect>
     <button class="start-button" @click="toggleRunning">{{ running ? 'Stop' : 'Start' }}</button>
-    <SpeedTrainer ref="speedTrainer" @tempo-increment="incrementTempo"></SpeedTrainer>
+    <SpeedTrainer v-if="mode" ref="speedTrainer" @tempo-increment="incrementTempo"></SpeedTrainer>
     <div class="radio-container">
       <input class="radio-input" type="radio" id="normal" :value="0" v-model="mode" />
       <label class="radio-input-label" for="normal">{{ modes[0] }}</label>
       <input class="radio-input" type="radio" id="speed-trainer" :value="1" v-model="mode" />
       <label class="radio-input-label" for="speed-trainer">{{ modes[1] }}</label>
-    </div>
-    <div>
-      {{ modes[mode] }}
     </div>
   </div>
 </template>

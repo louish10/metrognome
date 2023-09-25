@@ -8,7 +8,7 @@ const minTempo = 20
 const maxTempo = 300
 
 function setTempo(value) {
-  if (value > 20 && value < 300) {
+  if (value >= 20 && value <= 300) {
     tempo.value = value
   }
 }

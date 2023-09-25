@@ -3,7 +3,7 @@ import { ref } from 'vue'
 const emit = defineEmits(['tempoIncrement'])
 const beatsPassed = ref(0)
 const increaseBy = ref(4)
-const increaseEvery = ref (16)
+const increaseEvery = ref (1)
 
 function incrementBeatsPassed() {
 
@@ -35,13 +35,35 @@ defineExpose({
         </div>
         <input type="number" v-model="increaseEvery">
         <div>
-            beats. {{beatsPassed}}
+            beats.
         </div>
     </div>
 </template>
 
 <style scoped>
 .sentence {
-    display: flex
+    display: flex;
+    font-size: 30px;
+}
+
+input {
+    margin: 0 20px;
+    background-color: inherit;
+    color: inherit;
+    text-align: center;
+    border-width: 0 0 2px 0;
+    border-color: azure;
+    font-size: inherit;
+    width: 60px;
+}
+
+input[type=number] { 
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none; 
 }
 </style>
