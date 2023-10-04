@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import TempoSelect from './TempoSelect.vue'
 import Button from './Button.vue'
+import SpeedTrainer from './SpeedTrainer.vue'
 
 defineProps({
   msg: {
@@ -9,6 +10,9 @@ defineProps({
     required: true
   }
 })
+
+const speedTrainer = ref(null)
+const tempoSelect = ref(null)
 
 const running = ref(false)
 const tempo = ref(60)
@@ -52,6 +56,9 @@ async function playAudio() {
       clickScheduled = false
       lastClick = nextClick
       nextClick = lastClick + clickInterval()
+      if (speedTrainer.value) {
+        speedTrainer.value.incrementBeatsPassed()
+      }
     }
     if (!clickScheduled && nextClick - context.currentTime < 0.1) {
       scheduleClick(nextClick)
@@ -61,6 +68,9 @@ async function playAudio() {
 
 function stopAudio() {
   clearInterval(intervalId.value)
+  if(speedTrainer.value) {
+    speedTrainer.value.clearBeatsPassed()
+  }
 }
 
 function toggleRunning() {
@@ -74,7 +84,15 @@ function toggleRunning() {
 }
 
 function changeTempo(newTempo) {
-  tempo.value = newTempo
+  if (newTempo >= 20 && newTempo <= 300){
+    tempo.value = newTempo
+  }
+}
+
+function incrementTempo(tempoIncrement) {
+  changeTempo(tempo.value + tempoIncrement)
+  tempoSelect.value.setTempo(tempo.value)
+
 }
 </script>
 
@@ -83,16 +101,14 @@ function changeTempo(newTempo) {
     <div>
       <h1 class="header">Metrognome</h1>
     </div>
-    <TempoSelect @tempo-change="changeTempo"></TempoSelect>
+    <TempoSelect ref="tempoSelect" @tempo-change="changeTempo"></TempoSelect>
     <button class="start-button" @click="toggleRunning">{{ running ? 'Stop' : 'Start' }}</button>
+    <SpeedTrainer v-if="mode" ref="speedTrainer" @tempo-increment="incrementTempo"></SpeedTrainer>
     <div class="radio-container">
-      <input class="radio-input" type="radio" id="one" :value="0" v-model="mode" />
-      <label class="radio-input-label" for="one">{{ modes[0] }}</label>
-      <input class="radio-input" type="radio" id="two" :value="1" v-model="mode" />
-      <label class="radio-input-label" for="two">{{ modes[1] }}</label>
-    </div>
-    <div>
-      {{ modes[mode] }}
+      <input class="radio-input" type="radio" id="normal" :value="0" v-model="mode" />
+      <label class="radio-input-label" for="normal">{{ modes[0] }}</label>
+      <input class="radio-input" type="radio" id="speed-trainer" :value="1" v-model="mode" />
+      <label class="radio-input-label" for="speed-trainer">{{ modes[1] }}</label>
     </div>
   </div>
 </template>

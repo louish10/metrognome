@@ -7,6 +7,13 @@ const emit = defineEmits(['tempoChange'])
 const minTempo = 20
 const maxTempo = 300
 
+function setTempo(value) {
+  if (value >= 20 && value <= 300) {
+    tempo.value = value
+  }
+}
+defineExpose({setTempo})
+
 onMounted(() => {
   window.addEventListener('keydown', (e) => {
     switch (e.key) {
@@ -22,23 +29,28 @@ onMounted(() => {
 })
 
 function decrementTempo10() {
-  tempo.value = Math.max((tempo.value -= 10), minTempo)
+  setTempo(tempo.value - 10)
   emit('tempoChange', tempo.value)
 }
 
 function incrementTempo10() {
-  tempo.value = Math.max((tempo.value += 10), minTempo)
+  setTempo(tempo.value + 10)
   emit('tempoChange', tempo.value)
 }
 
 function decrementTempo() {
-  tempo.value = Math.max((tempo.value -= 4), minTempo)
+  setTempo(tempo.value - 4)
   emit('tempoChange', tempo.value)
 }
 
 function incrementTempo() {
-  tempo.value = Math.min((tempo.value += 4), maxTempo)
+  setTempo(tempo.value + 4)
   emit('tempoChange', tempo.value)
+}
+
+function handleTempoChange(newTempo) {
+  setTempo(parseInt(tempo))
+  emit('tempoChange', newTempo)
 }
 </script>
 
@@ -46,8 +58,8 @@ function incrementTempo() {
   <label class="tempo-value">{{ tempo }} bpm</label>
   <input
     class="slider"
-    v-model="tempo"
-    v-on:change="$emit('tempoChange', tempo)"
+    v-model.number="tempo"
+    v-on:change="handleTempoChange(tempo)"
     type="range"
     v-bind:min="minTempo"
     v-bind:max="maxTempo"
