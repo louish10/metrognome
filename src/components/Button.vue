@@ -20,8 +20,10 @@ const props = defineProps(['label', 'cb'])
 }
 
 .button:hover {
+  background-color: #39ff1411
 }
 
 .button:active {
+  background-color: #39ff1422
 }
 </style>
