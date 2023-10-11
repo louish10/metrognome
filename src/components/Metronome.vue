@@ -102,7 +102,7 @@ function incrementTempo(tempoIncrement) {
       <h1 class="header">Metrognome</h1>
     </div>
     <TempoSelect ref="tempoSelect" @tempo-change="changeTempo"></TempoSelect>
-    <button class="start-button" @click="toggleRunning">{{ running ? 'Stop' : 'Start' }}</button>
+    <Button class="start-button" @click="toggleRunning" v-bind:label="running ? 'Stop' : 'Start'" ></Button>
     <SpeedTrainer v-if="mode" ref="speedTrainer" @tempo-increment="incrementTempo"></SpeedTrainer>
     <div class="radio-container">
       <input class="radio-input" type="radio" id="normal" :value="0" v-model="mode" />
@@ -142,7 +142,7 @@ function incrementTempo(tempoIncrement) {
 .radio-container {
   margin: 20px 0px;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   gap: 10px;
 }
 .radio-input {
@@ -160,5 +160,13 @@ function incrementTempo(tempoIncrement) {
 .radio-input:checked + .radio-input-label {
   background-color: #39ff14;
   color: #404040;
+}
+
+.radio-input-label:hover {
+  background-color: #39ff1411
+}
+
+.radio-input-label:active{
+  background-color: #39ff1422
 }
 </style>
